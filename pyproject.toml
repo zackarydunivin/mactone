@@ -7,7 +7,7 @@ name = "mactone"
 version = "0.1.0"
 description = "Play macOS system alert tones from Python"
 authors = [
-    { name: "Zackary Okun Dunivin" }
+    { name = "Zackary Okun Dunivin" }
 ]
 readme = "README.md"
 requires-python = ">=3.7"
