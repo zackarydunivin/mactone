@@ -17,7 +17,7 @@ Coming soon to PyPI.
 For now, install directly from GitHub:
 
 ```bash
-pip install git+https://github.com/zdunivin/mactone.git
+pip install git+https://github.com/zackarydunivin/mactone.git
 ```
 
 ## Usage
