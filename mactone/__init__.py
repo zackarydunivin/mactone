@@ -3,7 +3,10 @@ import glob
 import random
 import time
 import tempfile
+import numpy as np
+import sounddevice as sd
 from pydub import AudioSegment, silence
+
 
 # Path to macOS system sounds
 _SOUND_DIR = "/System/Library/Sounds"
@@ -22,7 +25,18 @@ def play_system_sound(name):
     if name_lc in available:
         actual_name = available[name_lc]
         path = os.path.join(_SOUND_DIR, f"{actual_name}.aiff")
-        os.system(f"afplay '{path}'")
+        
+        # Load the audio file using pydub
+        audio = AudioSegment.from_file(path, format="aiff")
+        
+        # Convert to numpy array
+        samples = np.array(audio.get_array_of_samples())
+        if audio.channels > 1:
+            samples = samples.reshape((-1, audio.channels))
+            
+        # Play the audio
+        sd.play(samples, samplerate=audio.frame_rate)
+        sd.wait()
     else:
         raise ValueError(f"Sound '{name}' not found. Try one of: {', '.join(sorted(available.values()))}")
 
@@ -82,7 +96,7 @@ def trim_silence_from_file(file_path, silence_thresh=-50.0, min_silence_len=100)
 
 def play_trimmed_system_sound(name, silence_thresh=-50.0, min_silence_len=100):
     """
-    Play a system sound after trimming trailing silence.
+    Play a system sound after trimming trailing silence using sounddevice (no temp file).
     
     Parameters:
         name (str): The name of the system sound.
@@ -96,15 +110,13 @@ def play_trimmed_system_sound(name, silence_thresh=-50.0, min_silence_len=100):
         path = os.path.join(_SOUND_DIR, f"{actual_name}.aiff")
         trimmed_audio = trim_silence_from_file(path, silence_thresh, min_silence_len)
         
-        # Export trimmed audio to a temporary file and play it.
-        with tempfile.NamedTemporaryFile(suffix=".aiff", delete=False) as tmp:
-            temp_path = tmp.name
-            t_export0 = time.perf_counter()
-            trimmed_audio.export(temp_path, format="aiff")
-            t_export1 = time.perf_counter()
-            #print(f"Exporting trimmed audio took {t_export1 - t_export0:.3f} seconds")
-        os.system(f"afplay '{temp_path}'")
-        os.remove(temp_path)
+        # Convert AudioSegment to NumPy array
+        samples = np.array(trimmed_audio.get_array_of_samples())
+        if trimmed_audio.channels > 1:
+            samples = samples.reshape((-1, trimmed_audio.channels))
+
+        sd.play(samples, samplerate=trimmed_audio.frame_rate)
+        sd.wait()
     else:
         raise ValueError(f"Sound '{name}' not found. Try one of: {', '.join(sorted(available.values()))}")
 

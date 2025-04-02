@@ -6,7 +6,7 @@ A tiny Python library to play macOS system alert tones — with silence trimming
 
 - Play any macOS system sound by name (e.g., `"Glass"`, `"Submarine"`)
 - Call tone functions directly like `glass_tone()` or `submarine_tone()`
-- Automatically trims leading/trailing silence from each sound
+- Automatically trims trailing silence from system sounds (annoying dead air!)
 - Stores everything in memory for quick playback
 - Cross-script and reusable — great for alerts!
 
@@ -45,7 +45,7 @@ mactone.random_tone()
 - macOS
 - Python 3.7+
 - pydub
-- ffmpeg (installed via brew install ffmpeg)
+- sounddevice
 
 ## License
 

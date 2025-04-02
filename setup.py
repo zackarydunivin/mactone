@@ -6,7 +6,7 @@ setup(
     description="Play macOS system alert tones from Python",
     author="Zackary Okun Dunivin",
     packages=find_packages(),
-    install_requires=["pydub"],
+    install_requires=["pydub", "sounddevice", "numpy"],
     python_requires=">=3.7",
     include_package_data=True,
     classifiers=[
