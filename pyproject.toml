@@ -17,8 +17,5 @@ dependencies = [
     "pydub>=0.25.1"
 ]
 
-[tool.setuptools]
-package-dir = { "" = "mactone" }
-
 [tool.setuptools.packages.find]
-where = ["mactone"]
+where = ["."]
